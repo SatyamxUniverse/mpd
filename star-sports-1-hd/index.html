@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modify and Display MPD File</title>
+<title>Modify and Display MPD File with DRM Keys</title>
 </head>
 <body>
 
@@ -24,6 +24,37 @@ function fetchMPDContent(url) {
             document.getElementById('mpdContent').innerText = 'Error fetching MPD content.';
         });
 }
+
+// Function to add DRM keys to the existing code
+function addDRMKeys() {
+    const drmKeys = {
+        keys: [{
+            kty: "oct",
+            k: "IvWdMnvWSzWCm0wznHfSvw",
+            kid: "GtNI24+xVsCBxgZdzHNKnw"
+        }],
+        type: "temporary"
+    };
+
+    // Convert DRM keys object to a string
+    const drmKeysString = JSON.stringify(drmKeys);
+
+    // Find the script element in the document
+    const scriptElement = document.querySelector("script:not([src])");
+
+    // Check if the script element exists
+    if (scriptElement) {
+        // Add DRM keys as a new script element after the existing script
+        const drmScript = document.createElement('script');
+        drmScript.innerHTML = `const drmKeys = ${drmKeysString};`;
+        scriptElement.parentNode.insertBefore(drmScript, scriptElement.nextSibling);
+    } else {
+        console.error('Failed to find script element.');
+    }
+}
+
+// Call the function to add DRM keys
+addDRMKeys();
 
 // URL of the source MPD file
 const sourceMPDUrl = 'https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/source.mpd';
