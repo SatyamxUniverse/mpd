@@ -1,1 +1,35 @@
-<iframe src="https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd" title="Star Sports 1 HD"></iframe>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MPD Content Display</title>
+</head>
+<body>
+
+<div id="mpdContent"></div>
+
+<script>
+function fetchMPDContent() {
+    fetch('https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd')
+        .then(response => response.text())
+        .then(data => {
+            // Assuming you want to display the MPD content in a <pre> tag
+            document.getElementById('mpdContent').innerHTML = '<pre>' + data + '</pre>';
+        })
+        .catch(error => {
+            console.error('Error fetching MPD content:', error);
+        });
+}
+
+// Function to update MPD content every second
+function updateMPDContent() {
+    fetchMPDContent(); // Fetch MPD content initially
+    setInterval(fetchMPDContent, 1000); // Update MPD content every second
+}
+
+updateMPDContent(); // Start updating MPD content
+</script>
+
+</body>
+</html>
