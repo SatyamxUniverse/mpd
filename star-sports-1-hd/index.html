@@ -3,36 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MPD Content Display</title>
+<title>Modify and Display MPD File</title>
 </head>
 <body>
 
 <div id="mpdContent"></div>
 
-<?php
+<script>
 // Function to fetch MPD file content
-function fetchMPDContent($url) {
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $mpdContent = curl_exec($curl);
-    curl_close($curl);
-    return $mpdContent;
+function fetchMPDContent(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            // Modify the content as needed
+            // For demonstration, let's just display the content
+            document.getElementById('mpdContent').innerText = data;
+        })
+        .catch(error => {
+            console.error('Error fetching MPD content:', error);
+            document.getElementById('mpdContent').innerText = 'Error fetching MPD content.';
+        });
 }
 
-// URL of the MPD file
-$mpdUrl = "https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd";
+// URL of the source MPD file
+const sourceMPDUrl = 'https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/source.mpd';
 
-// Fetch MPD content
-$mpdContent = fetchMPDContent($mpdUrl);
-
-// Display MPD content
-if ($mpdContent) {
-    echo "<pre>" . htmlspecialchars($mpdContent) . "</pre>"; // Use htmlspecialchars to escape HTML special characters
-} else {
-    echo "Failed to fetch MPD content.";
-}
-?>
+// Fetch MPD content and display it
+fetchMPDContent(sourceMPDUrl);
+</script>
 
 </body>
 </html>
