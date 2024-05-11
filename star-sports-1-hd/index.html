@@ -3,64 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modify and Display MPD File with DRM Keys</title>
+<title>Download MPD File</title>
 </head>
 <body>
 
-<div id="mpdContent"></div>
+<button onclick="downloadMPD()">Download MPD File</button>
 
 <script>
-// Function to fetch MPD file content
-function fetchMPDContent(url) {
-    fetch(url)
-        .then(response => response.text())
-        .then(data => {
-            // Modify the content as needed
-            // For demonstration, let's just display the content
-            document.getElementById('mpdContent').innerText = data;
-        })
-        .catch(error => {
-            console.error('Error fetching MPD content:', error);
-            document.getElementById('mpdContent').innerText = 'Error fetching MPD content.';
-        });
+function downloadMPD() {
+    // URL of the MPD file to download
+    const mpdUrl = "https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd";
+
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = mpdUrl;
+    link.download = 'manifest.mpd'; // Specify the filename to save as
+
+    // Trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
-
-// Function to add DRM keys to the existing code
-function addDRMKeys() {
-    const drmKeys = {
-        keys: [{
-            kty: "oct",
-            k: "IvWdMnvWSzWCm0wznHfSvw",
-            kid: "GtNI24+xVsCBxgZdzHNKnw"
-        }],
-        type: "temporary"
-    };
-
-    // Convert DRM keys object to a string
-    const drmKeysString = JSON.stringify(drmKeys);
-
-    // Find the script element in the document
-    const scriptElement = document.querySelector("script:not([src])");
-
-    // Check if the script element exists
-    if (scriptElement) {
-        // Add DRM keys as a new script element after the existing script
-        const drmScript = document.createElement('script');
-        drmScript.innerHTML = `const drmKeys = ${drmKeysString};`;
-        scriptElement.parentNode.insertBefore(drmScript, scriptElement.nextSibling);
-    } else {
-        console.error('Failed to find script element.');
-    }
-}
-
-// Call the function to add DRM keys
-addDRMKeys();
-
-// URL of the source MPD file
-const sourceMPDUrl = 'https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/source.mpd';
-
-// Fetch MPD content and display it
-fetchMPDContent(sourceMPDUrl);
 </script>
 
 </body>
