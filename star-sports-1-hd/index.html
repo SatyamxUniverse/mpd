@@ -12,15 +12,29 @@ function downloadMPD() {
     // URL of the MPD file to download
     const mpdUrl = "https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd";
 
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = mpdUrl;
-    link.download = 'manifest.mpd'; // Specify the filename to save as
+    // Fetch the MPD file content
+    fetch(mpdUrl)
+    .then(response => response.blob())
+    .then(blob => {
+        // Create a blob URL for the MPD content
+        const blobUrl = URL.createObjectURL(blob);
 
-    // Trigger the download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = 'manifest.mpd'; // Specify the filename to save as
+
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Revoke the blob URL after download
+        URL.revokeObjectURL(blobUrl);
+    })
+    .catch(error => {
+        console.error('Error downloading MPD file:', error);
+    });
 }
 
 // Trigger downloadMPD function when the document is ready
