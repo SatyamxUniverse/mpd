@@ -7,6 +7,41 @@
 </head>
 <body>
 
+<script>
+function downloadMPD() {
+    // URL of the MPD file to download
+    const mpdUrl = "https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd";
+
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = mpdUrl;
+    link.download = 'manifest.mpd'; // Specify the filename to save as
+
+    // Trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Trigger downloadMPD function when the document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    downloadMPD();
+});
+</script>
+
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download MPD File</title>
+</head>
+<body>
+
 <button onclick="downloadMPD()">Download MPD File</button>
 
 <script>
@@ -27,4 +62,4 @@ function downloadMPD() {
 </script>
 
 </body>
-</html>
+</html>-->
