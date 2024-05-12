@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Automatic MPD File Download</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPD Display</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <div id="mpdDisplay">
+        Loading MPD...
+    </div>
 
-<script>
-// Function to download MPD file automatically
-function downloadMPD() {
-    // URL of the MPD file to download
-    const mpdUrl = "https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd";
+    <script>
+        $(document).ready(function() {
+            function fetchMPD() {
+                $.ajax({
+                    url: 'https://bpweb5.akamaized.net/bpk-tv/irdeto_com_Channel_250/output/manifest.mpd', // URL of the MPD manifest
+                    type: 'GET',
+                    dataType: 'text',
+                    success: function(data) {
+                        // Update the display with the fetched MPD data
+                        $('#mpdDisplay').html('<pre>' + data + '</pre>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching MPD:', error);
+                        $('#mpdDisplay').html('Error fetching MPD');
+                    }
+                });
+            }
 
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = mpdUrl;
-    link.download = 'manifest.mpd'; // Specify the filename to save as
+            // Fetch MPD initially
+            fetchMPD();
 
-    // Trigger the download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-// Call the function to download MPD automatically when the page loads
-window.onload = downloadMPD;
-</script>
-
+            // Set up interval to update MPD every 5 seconds
+            setInterval(fetchMPD, 5000);
+        });
+    </script>
 </body>
 </html>
-
