@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MPD Content Display</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPD Display</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <div id="mpdDisplay">
+        Loading MPD...
+    </div>
 
-<div id="mpdContent"></div>
+    <script>
+        $(document).ready(function() {
+            function fetchMPD() {
+                $.ajax({
+                    url: 'https://bpprod5catchup.akamaized.net/bpk-tv/irdeto_com_Channel_252/output/manifest.mpd?begin=20240514T010000&end=20250531T160000', // URL of the MPD manifest
+                    type: 'GET',
+                    dataType: 'text',
+                    success: function(data) {
+                        // Update the display with the fetched MPD data
+                        $('#mpdDisplay').html('<pre>' + data + '</pre>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching MPD:', error);
+                        $('#mpdDisplay').html('Error fetching MPD');
+                    }
+                });
+            }
 
-<script>
-function fetchMPDContent() {
-    fetch('https://bpprod5catchup.akamaized.net/bpk-tv/irdeto_com_Channel_252/output/manifest.mpd?begin=20240514T010000&end=20250531T160000')
-        .then(response => response.text())
-        .then(data => {
-            // Assuming you want to display the MPD content in a <pre> tag
-            document.getElementById('mpdContent').innerHTML = '<pre>' + data + '</pre>';
-        })
-        .catch(error => {
-            console.error('Error fetching MPD content:', error);
+            // Fetch MPD initially
+            fetchMPD();
+
+            // Set up interval to update MPD every 5 seconds
+            setInterval(fetchMPD, 5000);
         });
-}
-
-// Function to update MPD content every second
-function updateMPDContent() {
-    fetchMPDContent(); // Fetch MPD content initially
-    setInterval(fetchMPDContent, 1000); // Update MPD content every second
-}
-
-updateMPDContent(); // Start updating MPD content
-</script>
-
+    </script>
 </body>
 </html>
