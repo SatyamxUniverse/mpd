@@ -1,40 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPD Display</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download MPD File</title>
 </head>
 <body>
-    <div id="mpdDisplay">
-        Loading MPD...
-    </div>
 
-    <script>
-        $(document).ready(function() {
-            function fetchMPD() {
-                $.ajax({
-                    url: 'https://bpprod5catchup.akamaized.net/bpk-tv/irdeto_com_Channel_252/output/manifest.mpd?begin=20240514T010000&end=20250531T160000', // URL of the MPD manifest
-                    type: 'GET',
-                    dataType: 'text',
-                    success: function(data) {
-                        // Update the display with the fetched MPD data
-                        $('#mpdDisplay').html('<pre>' + data + '</pre>');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching MPD:', error);
-                        $('#mpdDisplay').html('Error fetching MPD');
-                    }
-                });
-            }
+<script>
+function downloadMPD() {
+    // URL of the MPD file to download
+    const mpdUrl = "https://bpprod5catchup.akamaized.net/bpk-tv/irdeto_com_Channel_252/output/manifest.mpd?begin=20240514T010000&end=20250531T160000";
 
-            // Fetch MPD initially
-            fetchMPD();
+    // Fetch the MPD file content
+    fetch(mpdUrl)
+    .then(response => response.blob())
+    .then(blob => {
+        // Create a blob URL for the MPD content
+        const blobUrl = URL.createObjectURL(blob);
 
-            // Set up interval to update MPD every 5 seconds
-            setInterval(fetchMPD, 5000);
-        });
-    </script>
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = 'manifest.mpd'; // Specify the filename to save as
+
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Revoke the blob URL after download
+        URL.revokeObjectURL(blobUrl);
+    })
+    .catch(error => {
+        console.error('Error downloading MPD file:', error);
+    });
+}
+
+// Trigger downloadMPD function when the document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    downloadMPD();
+});
+</script>
+
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download MPD File</title>
+</head>
+<body>
+
+<button onclick="downloadMPD()">Download MPD File</button>
+
+<script>
+function downloadMPD() {
+    // URL of the MPD file to download
+    const mpdUrl = "https://bpprod5catchup.akamaized.net/bpk-tv/irdeto_com_Channel_252/output/manifest.mpd?begin=20240514T010000&end=20250531T160000";
+
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = mpdUrl;
+    link.download = 'manifest.mpd'; // Specify the filename to save as
+
+    // Trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+
+</body>
+</html>-->
